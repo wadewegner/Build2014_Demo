@@ -8,10 +8,8 @@
         </Header>
         <Snippet>
             <Code Language="CSharp">
-                <![CDATA[private async Task<Token> GetAccessToken()
+                <![CDATA[private async Task GetAccessToken()
         {
-            var token = new Token();
-
             var startUrl = Common.FormatAuthUrl(AuthorizationEndpointUrl, ResponseTypes.Token, ConsumerKey,
                 WebUtility.UrlEncode(CallbackUrl), DisplayTypes.Popup);
             var startUri = new Uri(startUrl);
@@ -33,7 +31,7 @@
                     _accessToken = decoder.GetFirstValueByName("access_token");
                     _instanceUrl = WebUtility.UrlDecode(decoder.GetFirstValueByName("instance_url"));
 
-                    return token;
+                    return;
 
                 case Windows.Security.Authentication.Web.WebAuthenticationStatus.ErrorHttp:
                     throw new Exception(webAuthenticationResult.ResponseErrorDetail.ToString());
