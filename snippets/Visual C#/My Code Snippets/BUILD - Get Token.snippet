@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Title>BUILD DEMO: Get Token</Title>
+            <Shortcut>buildtoken</Shortcut>
+        </Header>
+        <Snippet>
+            <Code Language="CSharp">
+                <![CDATA[private async Task<Token> GetAccessToken()
+        {
+            var token = new Token();
+
+            var startUrl = Common.FormatAuthUrl(AuthorizationEndpointUrl, ResponseTypes.Token, ConsumerKey,
+                WebUtility.UrlEncode(CallbackUrl), DisplayTypes.Popup);
+            var startUri = new Uri(startUrl);
+            var endUri = new Uri(CallbackUrl);
+
+            var webAuthenticationResult =
+                await Windows.Security.Authentication.Web.WebAuthenticationBroker.AuthenticateAsync(
+                    Windows.Security.Authentication.Web.WebAuthenticationOptions.None,
+                    startUri,
+                    endUri);
+
+            switch (webAuthenticationResult.ResponseStatus)
+            {
+                case Windows.Security.Authentication.Web.WebAuthenticationStatus.Success:
+                    var responseData = webAuthenticationResult.ResponseData;
+                    var responseUri = new Uri(responseData);
+                    var decoder = new WwwFormUrlDecoder(responseUri.Fragment.Replace("#", "?"));
+
+                    _accessToken = decoder.GetFirstValueByName("access_token");
+                    _instanceUrl = WebUtility.UrlDecode(decoder.GetFirstValueByName("instance_url"));
+
+                    return token;
+
+                case Windows.Security.Authentication.Web.WebAuthenticationStatus.ErrorHttp:
+                    throw new Exception(webAuthenticationResult.ResponseErrorDetail.ToString());
+
+                default:
+                    throw new Exception(webAuthenticationResult.ResponseData);
+            }
+        }
+                ]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Title>BUILD DEMO: Page Loaded</Title>
+            <Shortcut>buildload</Shortcut>
+        </Header>
+        <Snippet>
+            <Code Language="CSharp">
+                <![CDATA[try
+            {
+                await GetAccessToken();
+
+                var client = new ForceClient(_instanceUrl, _accessToken, "v29.0");
+                var accounts = await client.QueryAsync<Account>("SELECT id, name, description FROM Account");
+
+                GridView1.ItemsSource = accounts.records;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+                ]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>
